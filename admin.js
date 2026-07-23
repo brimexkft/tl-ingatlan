@@ -6,7 +6,22 @@ const descriptionInput = form.elements.description;
 const priceReductionInput = document.getElementById('price-reduction');
 const discountPriceField = document.getElementById('discount-price-field');
 const discountPriceInput = document.getElementById('discount-price');
-function togglePriceReduction() { const active = priceReductionInput.checked; discountPriceField.hidden = !active; discountPriceInput.disabled = !active; if (!active) discountPriceInput.value = ''; }
+const commissionRateInput = document.getElementById('commission-rate');
+const commissionAmount = document.getElementById('commission-amount');
+function parseHungarianPrice(value) {
+  const text = String(value || '').toLowerCase().replace(/\s/g, '').replace(',', '.');
+  const match = text.match(/([0-9]+(?:\.[0-9]+)?)(m|e)?/);
+  if (!match) return 0;
+  const amount = Number(match[1]);
+  return amount * (match[2] === 'm' ? 1000000 : match[2] === 'e' ? 1000 : 1);
+}
+function updateCommission() {
+  const basePrice = priceReductionInput.checked && discountPriceInput.value.trim() ? discountPriceInput.value : priceInput.value;
+  const value = parseHungarianPrice(basePrice);
+  const rate = Number(commissionRateInput.value) || 0;
+  commissionAmount.textContent = value && rate ? `${Math.round(value * rate / 100).toLocaleString('hu-HU').replace(/\u00a0/g, ' ')} Ft` : '—';
+}
+function togglePriceReduction() { const active = priceReductionInput.checked; discountPriceField.hidden = !active; discountPriceInput.disabled = !active; if (!active) discountPriceInput.value = ''; updateCommission(); }
 priceReductionInput.addEventListener('change', togglePriceReduction);
 let selectedImages = [];
 let editingProperty = null;
@@ -62,8 +77,12 @@ renderDescriptionPreview();
 priceInput.addEventListener('blur', () => {
   const value = priceInput.value.trim();
   if (value && !/\bft\.?$/i.test(value)) priceInput.value = `${value} Ft`;
+  updateCommission();
 });
-discountPriceInput.addEventListener('blur', () => { const value = discountPriceInput.value.trim(); if (value && !/\bft\.?$/i.test(value)) discountPriceInput.value = `${value} Ft`; });
+priceInput.addEventListener('input', updateCommission);
+commissionRateInput.addEventListener('input', updateCommission);
+discountPriceInput.addEventListener('blur', () => { const value = discountPriceInput.value.trim(); if (value && !/\bft\.?$/i.test(value)) discountPriceInput.value = `${value} Ft`; updateCommission(); });
+discountPriceInput.addEventListener('input', updateCommission);
 
 function renderPreviews() {
   preview.replaceChildren(...selectedImages.map((src, index) => {
@@ -106,6 +125,7 @@ form.addEventListener('submit', async event => {
   const data = Object.fromEntries(new FormData(form));
   data.priceReduction = priceReductionInput.checked;
   data.discountPrice = priceReductionInput.checked ? discountPriceInput.value.trim() : '';
+  data.commissionAmount = commissionAmount.textContent;
   if (data.discountPrice && !/\bft\.?$/i.test(data.discountPrice)) data.discountPrice = `${data.discountPrice} Ft`;
   const id = editingProperty?.id || `${data.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}-${Date.now()}`;
   const property = { ...editingProperty, ...data, id, images: selectedImages, createdAt: editingProperty?.createdAt || new Date().toISOString(), status: editingProperty?.status || 'active' };
@@ -123,6 +143,7 @@ function editProperty(property) {
   priceReductionInput.checked = Boolean(property.priceReduction && property.discountPrice);
   discountPriceInput.value = property.discountPrice || '';
   togglePriceReduction();
+  updateCommission();
   document.querySelector('[data-tab="upload"]').click();
   document.querySelector('.admin-panel-heading h2').textContent = 'Ingatlan szerkesztése';
   form.querySelector('button[type="submit"]').innerHTML = 'Módosítások mentése <span>→</span>';
