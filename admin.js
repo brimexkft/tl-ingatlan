@@ -142,9 +142,10 @@ async function renderProperties() {
     target.replaceChildren(...items.map(property => {
       const item = document.createElement('article'); item.className = 'closed-property';
       const state = property.status === 'sold' ? 'Eladott' : property.status === 'rented' ? 'Kiadott' : 'Aktív hirdetés';
-      item.innerHTML = `<img src="${property.images?.[0] || ''}" alt="${property.title}" /><div><h3>${property.title}</h3><p>${property.location} · ${property.price} · Jelenlegi állapot: ${state}</p></div><div class="property-actions"><button type="button" class="edit-property">Szerkesztés</button><select aria-label="Hirdetés állapota"><option value="active">Aktív hirdetés</option><option value="sold">Értékesített</option><option value="rented">Kiadott</option></select></div>`;
+      item.innerHTML = `<img src="${property.images?.[0] || ''}" alt="${property.title}" /><div><h3>${property.title}</h3><p>${property.location} · ${property.price} · Jelenlegi állapot: ${state}</p></div><div class="property-actions"><button type="button" class="edit-property">Szerkesztés</button><select aria-label="Hirdetés állapota"><option value="active">Aktív hirdetés</option><option value="sold">Értékesített</option><option value="rented">Kiadott</option></select><label class="reserved-control"><input type="checkbox" ${property.reserved ? "checked" : ""} /> Foglalózva</label></div>`;
       const select = item.querySelector('select'); select.value = property.status || 'active';
       select.addEventListener('change', async () => { property.status = select.value; await TLPropertyStore.save(property); renderProperties(); });
+      item.querySelector('.reserved-control input').addEventListener('change', async event => { property.reserved = event.currentTarget.checked; await TLPropertyStore.save(property); renderProperties(); });
       item.querySelector('.edit-property').addEventListener('click', () => editProperty(property));
       return item;
     }));
