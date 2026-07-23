@@ -118,7 +118,17 @@ function showProperty(property, custom = false) {
   gallery.innerHTML = '<div class="gallery-viewport"><div class="gallery-track"></div></div>';
   const track = gallery.querySelector('.gallery-track');
   track.innerHTML = images.map((image, index) => `<button type="button" class="gallery-card" aria-label="${index + 1}. kép megnyitása"><img src="${image}" alt="${property.title} ${index + 1}. kép" /></button>`).join('');
-  track.querySelectorAll('.gallery-card').forEach((card, index) => card.addEventListener('click', () => openLightbox(images, index)));
+  track.querySelectorAll('.gallery-card').forEach((card, index) => {
+    card.addEventListener('click', () => openLightbox(images, index));
+    const image = card.querySelector('img');
+    const fitCardToImage = () => {
+      if (!image.naturalWidth || !image.naturalHeight) return;
+      card.style.flexBasis = `${Math.round(card.clientHeight * image.naturalWidth / image.naturalHeight)}px`;
+      renderGallery();
+    };
+    image.addEventListener('load', fitCardToImage);
+    if (image.complete) fitCardToImage();
+  });
   let navigation = document.getElementById('gallery-navigation');
   if (!navigation) { navigation = document.createElement('div'); navigation.id = 'gallery-navigation'; navigation.className = 'gallery-navigation'; navigation.innerHTML = '<button type="button" class="gallery-back" aria-label="Előző kép">←</button><span></span><button type="button" class="gallery-forward" aria-label="Következő kép">→</button>'; gallery.after(navigation); }
   let start = 0;
