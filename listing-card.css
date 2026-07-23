@@ -1,0 +1,1 @@
+.image-details-link{position:absolute;right:14px;bottom:14px;background:var(--brown);color:#fff;text-decoration:none;text-transform:uppercase;font:700 11px "DM Sans";letter-spacing:.7px;padding:9px 11px;transition:background .2s,transform .2s}.image-details-link:hover{background:var(--gold);color:var(--brown);transform:translateY(-2px)}.property-info .details-link{display:none}
