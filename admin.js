@@ -25,8 +25,10 @@ function renderPreviews() {
   preview.replaceChildren(...selectedImages.map((src, index) => {
     const item = document.createElement('div');
     item.draggable = true;
-    item.innerHTML = `<img src="${src}" alt="Feltöltött kép ${index + 1}" /><span class="image-order">${index + 1}</span><button type="button" aria-label="Kép törlése">×</button>`;
-    item.querySelector('button').addEventListener('click', () => { selectedImages.splice(index, 1); renderPreviews(); });
+    item.innerHTML = `<img src="${src}" alt="Feltöltött kép ${index + 1}" /><span class="image-order">${index + 1}</span><div class="image-move-buttons"><button type="button" class="move-left" aria-label="Kép balra mozgatása">←</button><button type="button" class="move-right" aria-label="Kép jobbra mozgatása">→</button></div><button type="button" class="remove-image" aria-label="Kép törlése">×</button>`;
+    item.querySelector('.remove-image').addEventListener('click', () => { selectedImages.splice(index, 1); renderPreviews(); });
+    item.querySelector('.move-left').addEventListener('click', () => { if (index > 0) { [selectedImages[index - 1], selectedImages[index]] = [selectedImages[index], selectedImages[index - 1]]; renderPreviews(); } });
+    item.querySelector('.move-right').addEventListener('click', () => { if (index < selectedImages.length - 1) { [selectedImages[index + 1], selectedImages[index]] = [selectedImages[index], selectedImages[index + 1]]; renderPreviews(); } });
     item.addEventListener('dragstart', event => { draggedImageIndex = index; item.classList.add('dragging'); event.dataTransfer.effectAllowed = 'move'; });
     item.addEventListener('dragend', () => item.classList.remove('dragging'));
     item.addEventListener('dragover', event => event.preventDefault());
