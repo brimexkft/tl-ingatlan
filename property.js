@@ -127,7 +127,7 @@ function showProperty(property, custom = false) {
       renderGallery();
     };
     image.addEventListener('load', fitCardToImage);
-    if (image.complete) fitCardToImage();
+    if (image.complete) setTimeout(fitCardToImage, 0);
   });
   let navigation = document.getElementById('gallery-navigation');
   if (!navigation) { navigation = document.createElement('div'); navigation.id = 'gallery-navigation'; navigation.className = 'gallery-navigation'; navigation.innerHTML = '<button type="button" class="gallery-back" aria-label="Előző kép">←</button><span></span><button type="button" class="gallery-forward" aria-label="Következő kép">→</button>'; gallery.after(navigation); }
