@@ -7,13 +7,51 @@ let selectedImages = [];
 let editingProperty = null;
 let draggedImageIndex = null;
 
-const descriptionPreview = document.createElement('div');
-descriptionPreview.className = 'html-description-preview';
-descriptionInput.after(descriptionPreview);
+descriptionInput.classList.add('rich-source');
+const richEditor = document.createElement('div');
+richEditor.className = 'rich-editor';
+richEditor.innerHTML = `<div class="rich-toolbar" role="toolbar">
+  <button type="button" data-command="bold" title="Félkövér"><strong>B</strong></button>
+  <button type="button" data-command="italic" title="Dőlt"><em>I</em></button>
+  <button type="button" data-command="underline" title="Aláhúzott"><u>U</u></button>
+  <span></span>
+  <button type="button" data-block="h2" title="Címsor">H2</button>
+  <button type="button" data-block="p" title="Bekezdés">¶</button>
+  <span></span>
+  <button type="button" data-command="insertUnorderedList" title="Felsorolás">• Lista</button>
+  <button type="button" data-command="justifyLeft" title="Balra igazítás">≡</button>
+  <button type="button" data-command="justifyCenter" title="Középre igazítás">≡</button>
+  <span></span>
+  <button type="button" class="insert-link" title="Hivatkozás beszúrása">🔗</button>
+  <button type="button" class="toggle-html" title="HTML-kód nézet">&lt;/&gt;</button>
+</div><div class="rich-editable" contenteditable="true" aria-label="Ingatlan részletes leírása"></div><textarea class="html-code" hidden aria-label="HTML-kód"></textarea>`;
+descriptionInput.after(richEditor);
+const editable = richEditor.querySelector('.rich-editable');
+const htmlCode = richEditor.querySelector('.html-code');
+let htmlMode = false;
+function syncDescription() { descriptionInput.value = htmlMode ? htmlCode.value : editable.innerHTML; }
 function renderDescriptionPreview() {
-  descriptionPreview.innerHTML = descriptionInput.value || '<p>Ide kerül a leírás HTML-es előnézete.</p>';
+  editable.innerHTML = descriptionInput.value || '<p>Ide írhatja az ingatlan részletes bemutatását.</p>';
+  htmlCode.value = descriptionInput.value;
 }
-descriptionInput.addEventListener('input', renderDescriptionPreview);
+editable.addEventListener('input', syncDescription);
+htmlCode.addEventListener('input', syncDescription);
+richEditor.querySelectorAll('[data-command]').forEach(button => button.addEventListener('click', () => {
+  editable.focus(); document.execCommand(button.dataset.command, false); syncDescription();
+}));
+richEditor.querySelectorAll('[data-block]').forEach(button => button.addEventListener('click', () => {
+  editable.focus(); document.execCommand('formatBlock', false, button.dataset.block); syncDescription();
+}));
+richEditor.querySelector('.insert-link').addEventListener('click', () => {
+  const url = prompt('Hivatkozás címe:');
+  if (url) { editable.focus(); document.execCommand('createLink', false, url); syncDescription(); }
+});
+richEditor.querySelector('.toggle-html').addEventListener('click', () => {
+  htmlMode = !htmlMode;
+  if (htmlMode) { htmlCode.value = editable.innerHTML; editable.hidden = true; htmlCode.hidden = false; }
+  else { editable.innerHTML = htmlCode.value; htmlCode.hidden = true; editable.hidden = false; syncDescription(); }
+  richEditor.classList.toggle('html-mode', htmlMode);
+});
 renderDescriptionPreview();
 
 priceInput.addEventListener('blur', () => {
@@ -55,6 +93,7 @@ imageInput.addEventListener('change', async event => {
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
+  syncDescription();
   if (!selectedImages.length) { alert('Kérjük, töltsön fel legalább egy fényképet.'); return; }
   if (priceInput.value.trim() && !/\bft\.?$/i.test(priceInput.value.trim())) priceInput.value = `${priceInput.value.trim()} Ft`;
   const data = Object.fromEntries(new FormData(form));
