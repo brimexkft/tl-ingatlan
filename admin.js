@@ -102,6 +102,7 @@ form.addEventListener('submit', async event => {
   syncDescription();
   if (!selectedImages.length) { alert('Kérjük, töltsön fel legalább egy fényképet.'); return; }
   if (priceInput.value.trim() && !/\bft\.?$/i.test(priceInput.value.trim())) priceInput.value = `${priceInput.value.trim()} Ft`;
+  if (priceReductionInput.checked && !discountPriceInput.value.trim()) { alert('Kérjük, adja meg a kedvezményes árat.'); return; }
   const data = Object.fromEntries(new FormData(form));
   data.priceReduction = priceReductionInput.checked;
   data.discountPrice = priceReductionInput.checked ? discountPriceInput.value.trim() : '';
