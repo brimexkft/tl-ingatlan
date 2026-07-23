@@ -24,3 +24,42 @@ TLPropertyStore.get(propertyId).then(custom => {
   if (custom) showProperty({ ...custom, area: `${custom.area} m²`, plot: custom.plot ? `${custom.plot} m² telek` : 'Nincs megadva' }, true);
   else showProperty(properties[propertyId] || properties['panoramas-csaladi-haz']);
 }).catch(() => showProperty(properties[propertyId] || properties['panoramas-csaladi-haz']));
+
+/* Enhanced gallery: images are unique and open in a lightbox instead of swapping/duplicating. */
+let lightbox;
+function openLightbox(images, startIndex) {
+  if (!lightbox) {
+    lightbox = document.createElement('div');
+    lightbox.className = 'image-lightbox';
+    lightbox.innerHTML = '<button class="lightbox-close" aria-label="Bezárás">×</button><button class="lightbox-prev" aria-label="Előző kép">‹</button><img alt="Ingatlan nagyított kép" /><button class="lightbox-next" aria-label="Következő kép">›</button><span class="lightbox-count"></span>';
+    document.body.append(lightbox);
+    lightbox.addEventListener('click', event => { if (event.target === lightbox || event.target.classList.contains('lightbox-close')) lightbox.hidden = true; });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && !lightbox.hidden) lightbox.hidden = true; });
+  }
+  let index = startIndex;
+  const image = lightbox.querySelector('img');
+  const render = () => { image.src = images[index]; lightbox.querySelector('.lightbox-count').textContent = `${index + 1} / ${images.length}`; };
+  lightbox.querySelector('.lightbox-prev').onclick = () => { index = (index - 1 + images.length) % images.length; render(); };
+  lightbox.querySelector('.lightbox-next').onclick = () => { index = (index + 1) % images.length; render(); };
+  render(); lightbox.hidden = false;
+}
+
+function showProperty(property, custom = false) {
+  const images = [...new Set((property.images || []).filter(Boolean))];
+  document.title = `${property.title} | TL Ingatlaniroda`;
+  document.getElementById('property-location').textContent = property.location;
+  document.getElementById('property-title').textContent = property.title;
+  document.getElementById('property-price').textContent = property.price;
+  document.getElementById('property-subtitle').textContent = `${property.type} · ${property.area} · ${property.rooms}`;
+  document.getElementById('property-description').innerHTML = property.description;
+  const main = document.getElementById('main-photo');
+  main.src = images[0] || ''; main.alt = property.title;
+  main.onclick = () => openLightbox(images, 0);
+  document.getElementById('side-photos').innerHTML = images.slice(1, 3).map((image, index) => `<button type="button" aria-label="${index + 2}. kép megnyitása"><img src="${image}" alt="${property.title} ${index + 2}. kép" /></button>`).join('');
+  document.querySelectorAll('.side-photos button').forEach((button, index) => button.addEventListener('click', () => openLightbox(images, index + 1)));
+  const features = custom ? [['Ingatlan típusa', property.type], ['Alapterület', property.area], ['Szobák száma', property.rooms], ['Ingatlan állapota', property.condition], ['Építés éve', property.year || 'Nincs megadva'], ['Emelet', property.floor], ['Emeletek száma', property.floors || 'Nincs megadva'], ['Lift', property.lift], ['Épület külső állapota', property.outside], ['Épület belső állapota', property.inside], ['Fényviszonyok', property.light], ['Parkolás', property.parking], ['Erkély / terasz', property.balcony], ['Nézet', property.view], ['Tájolás', property.orientation], ['Fűtés', property.heating || 'Nincs megadva'], ['Energetikai besorolás', property.energy]] : [['Ingatlan típusa', property.type], ['Alapterület', property.area], ['Szobák száma', property.rooms], ['Telek / környezet', property.plot], ['Építés / felújítás', property.year], ['Állapot', 'Újszerű']];
+  document.getElementById('feature-grid').innerHTML = features.map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join('');
+}
+const galleryStyle = document.createElement('style');
+galleryStyle.textContent = '.main-photo{cursor:zoom-in}.image-lightbox{position:fixed;z-index:1000;inset:0;background:rgba(20,10,4,.9);display:grid;place-items:center;padding:55px}.image-lightbox[hidden]{display:none}.image-lightbox img{display:block;max-width:90vw;max-height:82vh;object-fit:contain}.lightbox-close,.lightbox-prev,.lightbox-next{position:absolute;border:0;background:rgba(255,255,255,.14);color:#fff;cursor:pointer}.lightbox-close{right:24px;top:18px;width:42px;height:42px;font-size:30px}.lightbox-prev,.lightbox-next{top:50%;transform:translateY(-50%);width:52px;height:70px;font-size:52px;line-height:1}.lightbox-prev{left:20px}.lightbox-next{right:20px}.lightbox-count{position:absolute;bottom:22px;color:#fff;font:600 14px "DM Sans"}';
+document.head.append(galleryStyle);
