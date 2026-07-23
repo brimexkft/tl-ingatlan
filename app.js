@@ -1,5 +1,6 @@
 const tabs = document.querySelectorAll('.tab');
 let purpose = 'Eladó';
+const propertyPriceMarkup = data => data.priceReduction && data.discountPrice ? `<span class="price-reduction"><s>${data.price}</s><b>ÁRCSÖKKENÉS!</b><strong>${data.discountPrice}</strong></span>` : `<strong>${data.price}</strong>`;
 
 tabs.forEach(tab => tab.addEventListener('click', () => {
   tabs.forEach(item => item.classList.remove('active'));
@@ -49,7 +50,7 @@ document.getElementById('listing-form').addEventListener('submit', event => {
   card.dataset.type = data.type;
   card.dataset.location = data.location;
   card.dataset.area = data.area;
-  card.innerHTML = `<div class="property-image image-one"><span class="tag ${data.purpose === 'Kiadó' ? 'rent' : ''}">${data.purpose}</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button></div><div class="property-info"><p>${data.location}</p><h3>${data.title}</h3><div><strong>${data.price}</strong><span>${data.area} m² · Új hirdetés</span></div></div>`;
+  card.innerHTML = `<div class="property-image image-one"><span class="tag ${data.purpose === 'Kiadó' ? 'rent' : ''}">${data.purpose}</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button></div><div class="property-info"><p>${data.location}</p><h3>${data.title}</h3><div>${propertyPriceMarkup(data)}<span>${data.area} m² · Új hirdetés</span></div></div>`;
   card.querySelector('.heart').addEventListener('click', e => { e.currentTarget.classList.toggle('liked'); e.currentTarget.textContent = e.currentTarget.classList.contains('liked') ? '♥' : '♡'; });
   document.getElementById('property-grid').prepend(card);
   enablePropertyCard(card);
@@ -77,7 +78,7 @@ savedProperties.forEach(data => {
   card.dataset.location = data.location;
   card.dataset.area = data.area;
   const cover = data.images?.[0] || '';
-  card.innerHTML = `<div class="property-image" style="background-image:url('${cover}')">${data.reserved ? '<span class="reservation-ribbon">FOGLALÓZVA</span>' : ''}<span class="tag ${data.purpose === 'Kiadó' ? 'rent' : ''}">${data.purpose}</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button></div><div class="property-info"><p>${data.location}</p><h3>${data.title}</h3><div><strong>${data.price}</strong><span>${data.area} m² · ${data.rooms}</span></div><a class="image-details-link" href="property.html?id=${data.id}">Megnézem</a></div>`;
+  card.innerHTML = `<div class="property-image" style="background-image:url('${cover}')">${data.reserved ? '<span class="reservation-ribbon">FOGLALÓZVA</span>' : ''}<span class="tag ${data.purpose === 'Kiadó' ? 'rent' : ''}">${data.purpose}</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button></div><div class="property-info"><p>${data.location}</p><h3>${data.title}</h3><div>${propertyPriceMarkup(data)}<span>${data.area} m² · ${data.rooms}</span></div><a class="image-details-link" href="property.html?id=${data.id}">Megnézem</a></div>`;
   card.querySelector('.heart').addEventListener('click', event => { event.currentTarget.classList.toggle('liked'); event.currentTarget.textContent = event.currentTarget.classList.contains('liked') ? '♥' : '♡'; });
   document.getElementById('property-grid').prepend(card);
   enablePropertyCard(card);
@@ -93,7 +94,7 @@ TLPropertyStore.list().then(properties => properties.filter(data => !data.status
   card.dataset.location = data.location;
   card.dataset.area = data.area;
   const cover = data.images?.[0] || '';
-  card.innerHTML = `<div class="property-image" style="background-image:url('${cover}')">${data.reserved ? '<span class="reservation-ribbon">FOGLALÓZVA</span>' : ''}<span class="tag ${data.purpose === 'Kiadó' ? 'rent' : ''}">${data.purpose}</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button></div><div class="property-info"><p>${data.location}</p><h3>${data.title}</h3><div><strong>${data.price}</strong><span>${data.area} m² · ${data.rooms}</span></div><a class="image-details-link" href="property.html?id=${data.id}">Megnézem</a></div>`;
+  card.innerHTML = `<div class="property-image" style="background-image:url('${cover}')">${data.reserved ? '<span class="reservation-ribbon">FOGLALÓZVA</span>' : ''}<span class="tag ${data.purpose === 'Kiadó' ? 'rent' : ''}">${data.purpose}</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button></div><div class="property-info"><p>${data.location}</p><h3>${data.title}</h3><div>${propertyPriceMarkup(data)}<span>${data.area} m² · ${data.rooms}</span></div><a class="image-details-link" href="property.html?id=${data.id}">Megnézem</a></div>`;
   card.querySelector('.heart').addEventListener('click', event => { event.currentTarget.classList.toggle('liked'); event.currentTarget.textContent = event.currentTarget.classList.contains('liked') ? '♥' : '♡'; });
   document.getElementById('property-grid').prepend(card);
   enablePropertyCard(card);
