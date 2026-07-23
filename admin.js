@@ -1,14 +1,43 @@
 const form = document.getElementById('property-form');
 const imageInput = document.getElementById('images');
 const preview = document.getElementById('image-preview');
+const priceInput = form.elements.price;
+const descriptionInput = form.elements.description;
 let selectedImages = [];
 let editingProperty = null;
+let draggedImageIndex = null;
+
+const descriptionPreview = document.createElement('div');
+descriptionPreview.className = 'html-description-preview';
+descriptionInput.after(descriptionPreview);
+function renderDescriptionPreview() {
+  descriptionPreview.innerHTML = descriptionInput.value || '<p>Ide kerül a leírás HTML-es előnézete.</p>';
+}
+descriptionInput.addEventListener('input', renderDescriptionPreview);
+renderDescriptionPreview();
+
+priceInput.addEventListener('blur', () => {
+  const value = priceInput.value.trim();
+  if (value && !/\bft\.?$/i.test(value)) priceInput.value = `${value} Ft`;
+});
 
 function renderPreviews() {
   preview.replaceChildren(...selectedImages.map((src, index) => {
     const item = document.createElement('div');
-    item.innerHTML = `<img src="${src}" alt="Feltöltött kép ${index + 1}" /><button type="button" aria-label="Kép törlése">×</button>`;
+    item.draggable = true;
+    item.innerHTML = `<img src="${src}" alt="Feltöltött kép ${index + 1}" /><span class="image-order">${index + 1}</span><button type="button" aria-label="Kép törlése">×</button>`;
     item.querySelector('button').addEventListener('click', () => { selectedImages.splice(index, 1); renderPreviews(); });
+    item.addEventListener('dragstart', event => { draggedImageIndex = index; item.classList.add('dragging'); event.dataTransfer.effectAllowed = 'move'; });
+    item.addEventListener('dragend', () => item.classList.remove('dragging'));
+    item.addEventListener('dragover', event => event.preventDefault());
+    item.addEventListener('drop', event => {
+      event.preventDefault();
+      if (draggedImageIndex === null || draggedImageIndex === index) return;
+      const [moved] = selectedImages.splice(draggedImageIndex, 1);
+      selectedImages.splice(index, 0, moved);
+      draggedImageIndex = null;
+      renderPreviews();
+    });
     return item;
   }));
 }
@@ -18,31 +47,28 @@ imageInput.addEventListener('change', async event => {
   const converted = await Promise.all(files.map(file => new Promise((resolve, reject) => {
     const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file);
   })));
-  selectedImages.push(...converted); renderPreviews(); imageInput.value = '';
+  selectedImages = [...new Set([...selectedImages, ...converted])];
+  renderPreviews(); imageInput.value = '';
 });
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
   if (!selectedImages.length) { alert('Kérjük, töltsön fel legalább egy fényképet.'); return; }
+  if (priceInput.value.trim() && !/\bft\.?$/i.test(priceInput.value.trim())) priceInput.value = `${priceInput.value.trim()} Ft`;
   const data = Object.fromEntries(new FormData(form));
   const id = editingProperty?.id || `${data.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}-${Date.now()}`;
   const property = { ...editingProperty, ...data, id, images: selectedImages, createdAt: editingProperty?.createdAt || new Date().toISOString(), status: editingProperty?.status || 'active' };
   const submitButton = form.querySelector('button[type="submit"]');
   submitButton.disabled = true; submitButton.textContent = 'Mentés folyamatban…';
-  try {
-    await TLPropertyStore.save(property);
-    window.location.href = `property.html?id=${id}`;
-  } catch {
-    submitButton.disabled = false; submitButton.textContent = editingProperty ? 'Módosítások mentése →' : 'Hirdetés mentése →';
-    alert('A hirdetés mentése nem sikerült.');
-  }
+  try { await TLPropertyStore.save(property); window.location.href = `property.html?id=${id}`; }
+  catch { submitButton.disabled = false; submitButton.textContent = editingProperty ? 'Módosítások mentése →' : 'Hirdetés mentése →'; alert('A hirdetés mentése nem sikerült.'); }
 });
 
 function editProperty(property) {
   editingProperty = property;
   Object.entries(property).forEach(([key, value]) => { if (form.elements[key] && typeof value === 'string') form.elements[key].value = value; });
-  selectedImages = [...(property.images || [])];
-  renderPreviews();
+  selectedImages = [...new Set(property.images || [])];
+  renderPreviews(); renderDescriptionPreview();
   document.querySelector('[data-tab="upload"]').click();
   document.querySelector('.admin-panel-heading h2').textContent = 'Ingatlan szerkesztése';
   form.querySelector('button[type="submit"]').innerHTML = 'Módosítások mentése <span>→</span>';
