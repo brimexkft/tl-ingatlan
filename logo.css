@@ -1,0 +1,4 @@
+/* A teljes logó látható marad: keskeny belső tér a tető és a felirat körül is. */
+.brand{background-size:450px auto;background-position:center center}
+.footer-brand{height:86px;background-size:380px auto;background-position:center center}
+@media(max-width:850px){.brand{background-size:365px auto;background-position:center center}}

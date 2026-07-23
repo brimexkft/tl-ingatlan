@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="TL Ingatlaniroda – otthonok, ahol elkezdődik a következő fejezet." />
+    <title>TL Ingatlaniroda | Találja meg új otthonát</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="custom.css" />
+    <link rel="stylesheet" href="about.css" />
+    <link rel="stylesheet" href="logo.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#kezdolap" aria-label="TL Ingatlaniroda kezdőlap">
+        <img src="tl-logo.png" alt="TL Ingatlaniroda logó" />
+      </a>
+      <nav class="main-nav" aria-label="Fő navigáció">
+        <a class="active" href="#kezdolap">Kezdőlap</a>
+        <a href="#ingatlanok">Ingatlanok</a>
+        <a href="#rolunk">Rólunk</a>
+        <a href="#kapcsolat">Kapcsolat</a>
+      </nav>
+      <a class="header-phone" href="tel:+36301234567"><span>☎</span> +36 30 123 4567</a>
+      <a class="add-listing" href="admin.html">Admin felület</a>
+      <button class="menu-button" aria-label="Menü megnyitása" aria-expanded="false">☰</button>
+    </header>
+
+    <main id="kezdolap">
+      <section class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">TL INGATLANIRODA</p>
+          <h1>Otthonok, ahol <em>elkezdődik</em><br />a következő fejezet.</h1>
+          <p class="hero-text">Találjuk meg együtt azt az ingatlant, ami igazán Önre vár.</p>
+        </div>
+        <div class="hero-scroll">Fedezze fel <span>↓</span></div>
+      </section>
+
+      <section class="search-panel" aria-label="Ingatlankereső">
+        <div class="search-tabs" role="tablist">
+          <button class="tab active" data-purpose="Eladó">Eladó</button>
+          <button class="tab" data-purpose="Kiadó">Kiadó</button>
+        </div>
+        <div class="search-fields">
+          <label>Ingatlan fajtája<select id="type"><option>Válasszon típust</option><option>Ház</option><option>Lakás</option><option>Telek</option><option>Nyaraló</option></select></label>
+          <label>Lokáció<input id="location" type="text" placeholder="Város, kerület vagy környék" /></label>
+          <label>Alapterület (m²)<span class="range"><input id="min-area" type="number" placeholder="Min." min="0" /><i>—</i><input id="max-area" type="number" placeholder="Max." min="0" /></span></label>
+          <button class="search-button" id="search-btn"><span>⌕</span> Keresés</button>
+        </div>
+      </section>
+
+      <section class="listings" id="ingatlanok">
+        <div class="section-heading">
+          <div><p class="eyebrow">VÁLOGATOTT AJÁNLATAINK</p><h2>Fedezze fel kiemelt ingatlanainkat</h2></div>
+          <a href="#ingatlanok" class="all-link">Összes ingatlan <span>→</span></a>
+        </div>
+        <div class="property-grid" id="property-grid">
+          <article class="property-card" tabindex="0" role="link" data-id="panoramas-csaladi-haz" data-type="Ház" data-location="Budapest" data-area="145" data-title="Panorámás családi ház" data-price="189 M Ft" data-rooms="5 szoba" data-description="Tágas, világos családi ház Budapest egyik legkedveltebb részén. A nagy üvegfelületek és a gondosan kialakított kert minden nap különleges hangulatot adnak. Ideális választás azoknak, akik nyugodt környezetben, mégis a város közelében szeretnének élni." data-images="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85|https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85|https://images.unsplash.com/photo-1600566753051-f0b89df2dd90?auto=format&fit=crop&w=1400&q=85">
+            <div class="property-image image-one"><span class="tag">Eladó</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button></div>
+            <div class="property-info"><p>Budapest II. kerület</p><h3>Panorámás családi ház</h3><div><strong>189 M Ft</strong><span>145 m² · 5 szoba</span></div><a class="details-link" href="property.html?id=panoramas-csaladi-haz">Megnézem a részleteket <span>→</span></a></div>
+          </article>
+          <article class="property-card" tabindex="0" role="link" data-id="elegans-belvarosi-lakas" data-type="Lakás" data-location="Budapest" data-area="78" data-title="Elegáns belvárosi lakás" data-price="119 M Ft" data-rooms="3 szoba" data-description="Igényesen felújított, elegáns lakás a belváros szívében. A prémium anyaghasználat, a praktikus alaprajz és a kiváló közlekedés együtt teszik igazán szerethető otthonná." data-images="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85|https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1400&q=85|https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85">
+            <div class="property-image image-two"><span class="tag">Eladó</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button></div>
+            <div class="property-info"><p>Budapest V. kerület</p><h3>Elegáns belvárosi lakás</h3><div><strong>119 M Ft</strong><span>78 m² · 3 szoba</span></div><a class="details-link" href="property.html?id=elegans-belvarosi-lakas">Megnézem a részleteket <span>→</span></a></div>
+          </article>
+          <article class="property-card" tabindex="0" role="link" data-id="modern-otthon-szentendre" data-type="Ház" data-location="Szentendre" data-area="112" data-title="Modern otthon a természetben" data-price="650 e Ft / hó" data-rooms="4 szoba" data-description="Kortárs otthon Szentendre csendes, zöldövezeti részén. A terasz és a napfényes közösségi terek a kikapcsolódás, a különálló hálószobák pedig a kényelmes mindennapok helyszínei." data-images="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=85|https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85|https://images.unsplash.com/photo-1600585152915-d208bec867a1?auto=format&fit=crop&w=1400&q=85">
+            <div class="property-image image-three"><span class="tag rent">Kiadó</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button></div>
+            <div class="property-info"><p>Szentendre</p><h3>Modern otthon a természetben</h3><div><strong>650 e Ft / hó</strong><span>112 m² · 4 szoba</span></div><a class="details-link" href="property.html?id=modern-otthon-szentendre">Megnézem a részleteket <span>→</span></a></div>
+          </article>
+        </div>
+        <p class="empty-state" id="empty-state" hidden>Nincs találat ezekkel a feltételekkel. Próbáljon más keresést!</p>
+      </section>
+
+      <section class="about" id="rolunk">
+        <div class="about-portrait"><img src="tamas-laszlo.jpg" alt="A TL Ingatlaniroda ingatlanközvetítője" /></div>
+        <div class="about-copy"><p class="eyebrow">RÓLAM</p><h2>Személyes figyelem.<br />Biztos döntések.</h2><p>Regisztrált ingatlanközvetítőként segítem ügyfeleimet Hódmezővásárhelyen és környékén. Célom, hogy az ingatlanügyletek egyszerűen, átláthatóan és az Ön érdekeit szem előtt tartva valósuljanak meg.</p><p>Az értékesítés teljes folyamatát kézben tartom: a reális piaci ár meghatározásától és a professzionális hirdetéstől a bemutatásokon át az adásvételig. Energetikai tanúsítvány, hitelügyintézés és ügyvédi háttér megszervezésében is segítséget nyújtok.</p><p>Keressem bizalommal!</p><div class="service-tags"><span>ingatlan eladás</span><span>ingatlan vásárlás</span><span>ingatlan bérbeadás</span><span>bérlemény felügyelet</span></div><a href="#kapcsolat" class="outline-button">Vegye fel velem a kapcsolatot <span>→</span></a></div>
+        <aside class="about-support"><p class="eyebrow">AMIBEN MÉG SEGÍTENI TUDOK</p><div><span>Energetikai tanúsítvány</span><span>Hitelügyintézés</span><span>Ügyvédi háttér</span></div><p class="about-note">Biztonságot és időmegtakarítást nyújtok a teljes folyamatban.</p></aside>
+      </section>
+    </main>
+
+    <footer id="kapcsolat"><div><span class="footer-brand" aria-label="TL Ingatlaniroda"></span><p>Az otthon megtalálásának biztos partnere.</p></div><div><p>Kapcsolat</p><a href="tel:+36301234567">+36 30 123 4567</a><a href="mailto:hello@tlingatlan.hu">hello@tlingatlan.hu</a></div><div><p>Iroda</p><span>Budapest, Magyarország</span><span>H–P: 9:00–17:00</span></div></footer>
+    <div class="modal" id="listing-modal" hidden>
+      <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" id="close-listing" aria-label="Bezárás">×</button>
+        <p class="eyebrow">ÚJ HIRDETÉS</p><h2 id="modal-title">Ingatlan feltöltése</h2>
+        <form id="listing-form" class="listing-form">
+          <label>Cím<input required name="title" placeholder="Pl. Napos családi ház" /></label>
+          <label>Lokáció<input required name="location" placeholder="Pl. Érd" /></label>
+          <div><label>Típus<select name="type"><option>Ház</option><option>Lakás</option><option>Telek</option><option>Nyaraló</option></select></label><label>Alapterület (m²)<input required name="area" type="number" min="1" placeholder="120" /></label></div>
+          <div><label>Ár<input required name="price" placeholder="Pl. 89 M Ft" /></label><label>Hirdetés<select name="purpose"><option>Eladó</option><option>Kiadó</option></select></label></div>
+          <button>Hirdetés hozzáadása</button>
+        </form>
+      </div>
+    </div>
+    <div class="modal property-modal" id="property-modal" hidden>
+      <div class="property-detail" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+        <button class="modal-close" id="close-property" aria-label="Bezárás">×</button>
+        <div class="detail-gallery"><img id="detail-main-image" src="" alt="Ingatlan fényképe" /><div id="detail-thumbnails" class="thumbnails"></div></div>
+        <div class="detail-content"><p class="eyebrow" id="detail-location"></p><h2 id="detail-title"></h2><div class="detail-price" id="detail-price"></div><div class="detail-specs"><span id="detail-type"></span><span id="detail-area"></span><span id="detail-rooms"></span></div><p id="detail-description"></p><a class="detail-contact" href="#kapcsolat">Érdeklődöm az ingatlanról <span>→</span></a></div>
+      </div>
+    </div>
+    <script src="db.js"></script><script src="app.js"></script><script src="profile.js"></script>
+  </body>
+</html>

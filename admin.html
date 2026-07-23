@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | TL Ingatlaniroda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="custom.css" /><link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="logo.css" />
+    <link rel="stylesheet" href="admin-tabs.css" />
+  </head>
+  <body class="admin-page">
+    <header class="site-header"><a class="brand" href="index.html" aria-label="TL Ingatlaniroda kezdőlap"><img src="tl-logo.png" alt="TL Ingatlaniroda" /></a><div class="admin-title"><span>ADMIN FELÜLET</span><strong>Új ingatlan feltöltése</strong></div><a class="back-to-site" href="index.html">← Vissza a weboldalra</a></header>
+    <main class="admin-main">
+      <div class="admin-intro"><p class="eyebrow">HIRDETÉS KEZELŐ</p><h1>Adminisztráció</h1><p>Kezelje adatait, hirdetéseit és a lezárt ingatlanügyleteket egy helyen.</p></div>
+      <nav class="admin-tabs" role="tablist"><button class="admin-tab active" data-tab="profile" role="tab">Saját adatok</button><button class="admin-tab" data-tab="upload" role="tab">Ingatlan feltöltése</button><button class="admin-tab" data-tab="closed" role="tab">Értékesített / kiadott</button></nav>
+      <section class="admin-panel active" id="profile-panel">
+        <div class="form-card"><h2>Saját adatok</h2><p class="form-hint">Ezek az adatok jelennek meg kapcsolatként a weboldalon és az ingatlanok adatlapján.</p>
+          <form id="profile-form"><div class="form-grid"><label>Név<input required name="name" placeholder="Pl. Tamás László" /></label><label>Iroda neve<input name="office" placeholder="Pl. TL Ingatlaniroda" /></label><label>Cím<input name="address" placeholder="Pl. Hódmezővásárhely, ..." /></label><label>Telefonszám<input required name="phone" type="tel" placeholder="+36 30 123 4567" /></label><label>E-mail cím<input required name="email" type="email" placeholder="hello@tlingatlan.hu" /></label><label>Weboldal<input name="website" type="url" placeholder="https://..." /></label><label>Facebook oldal<input name="facebook" placeholder="https://facebook.com/..." /></label><label>Instagram fiók<input name="instagram" placeholder="https://instagram.com/..." /></label></div><div class="save-bar"><span>A megadott adatok bármikor módosíthatók.</span><button type="submit">Adatok mentése <span>→</span></button></div></form>
+        </div>
+      </section>
+      <section class="admin-panel" id="upload-panel"><div class="admin-panel-heading"><h2>Ingatlan feltöltése</h2><p>Töltse ki az alapadatokat, adja meg a részletes jellemzőket, majd töltse fel a fényképeket.</p></div>
+      <form id="property-form">
+        <section class="form-card"><h2>Alapadatok</h2><div class="form-grid">
+          <label>Hirdetés címe<input required name="title" placeholder="Pl. Új építésű sorházi lakás" /></label><label>Lokáció<input required name="location" placeholder="Pl. Hódmezővásárhely, Újváros" /></label>
+          <label>Ingatlan típusa<select required name="type"><option value="">Válasszon</option><option>Lakás</option><option>Családi ház</option><option>Sorház</option><option>Ikerház</option><option>Telek</option><option>Nyaraló</option><option>Üzlethelyiség</option></select></label>
+          <label>Szobák száma<select required name="rooms"><option value="">Válasszon</option><option>1 szoba</option><option>1 + 1 fél szoba</option><option>2 szoba</option><option>2 + 1 fél szoba</option><option>3 szoba</option><option>3 + 1 fél szoba</option><option>4 szoba</option><option>5 vagy több szoba</option></select></label>
+          <label>Hirdetés típusa<select required name="purpose"><option>Eladó</option><option>Kiadó</option></select></label><label>Ár<input required name="price" placeholder="Pl. 59,9 M Ft" /></label>
+          <label>Alapterület (m²)<input required name="area" type="number" min="1" placeholder="56" /></label><label>Telek mérete (m²)<input name="plot" type="number" min="0" placeholder="Opcionális" /></label>
+        </div></section>
+        <section class="form-card"><h2>Általános adatok</h2><p class="form-hint">A csatolt minta alapján ezek az információk az ingatlan adatlapján külön jelennek meg.</p><div class="form-grid characteristics-grid">
+          <label>Ingatlan állapota<select name="condition"><option>Újépítésű</option><option>Újszerű</option><option>Jó állapotú</option><option>Felújított</option><option>Felújítandó</option></select></label><label>Építés éve<input name="year" type="number" min="1800" max="2100" placeholder="2026" /></label>
+          <label>Emelet<select name="floor"><option>Földszint</option><option>1. emelet</option><option>2. emelet</option><option>3. emelet vagy magasabb</option><option>Nem releváns</option></select></label><label>Emeletek száma<input name="floors" type="number" min="0" placeholder="1" /></label>
+          <label>Lift<select name="lift"><option>Nincs lift</option><option>Van lift</option><option>Nem releváns</option></select></label><label>Épület külső állapota<select name="outside"><option>Újépítésű</option><option>Jó</option><option>Átlagos</option><option>Felújítandó</option></select></label>
+          <label>Épület belső állapota<select name="inside"><option>Újépítésű</option><option>Jó</option><option>Átlagos</option><option>Felújítandó</option></select></label><label>Fényviszonyok<select name="light"><option>Napfényes</option><option>Világos</option><option>Átlagos</option><option>Sötét</option></select></label>
+          <label>Parkolás<select name="parking"><option>Van</option><option>Nincs</option><option>Utcán ingyenes</option><option>Garázs</option><option>Udvari beálló</option></select></label><label>Erkély / terasz<select name="balcony"><option>Van</option><option>Nincs</option></select></label>
+          <label>Nézet<select name="view"><option>Udvar</option><option>Utca</option><option>Kert</option><option>Panorámás</option></select></label><label>Tájolás<select name="orientation"><option>É</option><option>K</option><option>D</option><option>Ny</option><option>ÉK</option><option>DK</option><option>DNy</option><option>ÉNy</option></select></label>
+          <label>Fűtés<input name="heating" placeholder="Pl. napelem, klíma" /></label><label>Energetikai besorolás<select name="energy"><option>Nincs megadva</option><option>AA++</option><option>AA+</option><option>AA</option><option>BB</option><option>CC</option><option>DD</option></select></label>
+        </div></section>
+        <section class="form-card"><h2>Leírás</h2><p class="form-hint">Szabad szavas, részletes bemutatkozó szöveg. Bekezdésekre tagolva is megadható.</p><label class="full-label">Ingatlan részletes leírása<textarea required name="description" rows="12" placeholder="Írja ide az ingatlan részletes leírását, környezetét, felszereltségét és előnyeit..."></textarea></label></section>
+        <section class="form-card"><h2>Fényképek</h2><p class="form-hint">Az első kép lesz a kiemelt kép. Egyszerre több képet is feltölthet.</p><label class="file-drop">Fényképek kiválasztása<input id="images" name="images" type="file" accept="image/*" multiple /><span>+ Képek feltöltése</span></label><div id="image-preview" class="image-preview"></div></section>
+        <div class="save-bar"><span>A hirdetés a böngészőben mentődik el.</span><button type="submit">Hirdetés mentése <span>→</span></button></div>
+      </form></section>
+      <section class="admin-panel" id="closed-panel"><div class="admin-panel-heading"><h2>Értékesített vagy kiadott ingatlanok</h2><p>Itt kezelheti a lezárt hirdetéseket. A főoldalról automatikusan lekerülnek.</p></div><div id="closed-properties" class="closed-properties"></div></section>
+    </main><script src="db.js"></script><script src="admin.js"></script>
+  </body>
+</html>
