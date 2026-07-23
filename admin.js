@@ -3,6 +3,11 @@ const imageInput = document.getElementById('images');
 const preview = document.getElementById('image-preview');
 const priceInput = form.elements.price;
 const descriptionInput = form.elements.description;
+const priceReductionInput = document.getElementById('price-reduction');
+const discountPriceField = document.getElementById('discount-price-field');
+const discountPriceInput = document.getElementById('discount-price');
+function togglePriceReduction() { const active = priceReductionInput.checked; discountPriceField.hidden = !active; discountPriceInput.disabled = !active; if (!active) discountPriceInput.value = ''; }
+priceReductionInput.addEventListener('change', togglePriceReduction);
 let selectedImages = [];
 let editingProperty = null;
 let draggedImageIndex = null;
@@ -58,6 +63,7 @@ priceInput.addEventListener('blur', () => {
   const value = priceInput.value.trim();
   if (value && !/\bft\.?$/i.test(value)) priceInput.value = `${value} Ft`;
 });
+discountPriceInput.addEventListener('blur', () => { const value = discountPriceInput.value.trim(); if (value && !/\bft\.?$/i.test(value)) discountPriceInput.value = `${value} Ft`; });
 
 function renderPreviews() {
   preview.replaceChildren(...selectedImages.map((src, index) => {
@@ -97,6 +103,9 @@ form.addEventListener('submit', async event => {
   if (!selectedImages.length) { alert('Kérjük, töltsön fel legalább egy fényképet.'); return; }
   if (priceInput.value.trim() && !/\bft\.?$/i.test(priceInput.value.trim())) priceInput.value = `${priceInput.value.trim()} Ft`;
   const data = Object.fromEntries(new FormData(form));
+  data.priceReduction = priceReductionInput.checked;
+  data.discountPrice = priceReductionInput.checked ? discountPriceInput.value.trim() : '';
+  if (data.discountPrice && !/\bft\.?$/i.test(data.discountPrice)) data.discountPrice = `${data.discountPrice} Ft`;
   const id = editingProperty?.id || `${data.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}-${Date.now()}`;
   const property = { ...editingProperty, ...data, id, images: selectedImages, createdAt: editingProperty?.createdAt || new Date().toISOString(), status: editingProperty?.status || 'active' };
   const submitButton = form.querySelector('button[type="submit"]');
@@ -110,6 +119,9 @@ function editProperty(property) {
   Object.entries(property).forEach(([key, value]) => { if (form.elements[key] && typeof value === 'string') form.elements[key].value = value; });
   selectedImages = [...new Set(property.images || [])];
   renderPreviews(); renderDescriptionPreview();
+  priceReductionInput.checked = Boolean(property.priceReduction && property.discountPrice);
+  discountPriceInput.value = property.discountPrice || '';
+  togglePriceReduction();
   document.querySelector('[data-tab="upload"]').click();
   document.querySelector('.admin-panel-heading h2').textContent = 'Ingatlan szerkesztése';
   form.querySelector('button[type="submit"]').innerHTML = 'Módosítások mentése <span>→</span>';
