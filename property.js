@@ -9,7 +9,7 @@ function showProperty(property, custom = false) {
   document.title = `${property.title} | TL Ingatlaniroda`;
   document.getElementById('property-location').textContent = property.location;
   document.getElementById('property-title').textContent = property.title;
-  document.getElementById('property-price').textContent = property.price;
+  document.getElementById('property-price').innerHTML = property.priceReduction && property.discountPrice ? `<span class="detail-price-reduction"><s>${property.price}</s><b>ÁRCSÖKKENÉS!</b><strong>${property.discountPrice}</strong></span>` : property.price;
   document.getElementById('property-subtitle').textContent = `${property.type} · ${property.area} · ${property.rooms}`;
   document.getElementById('property-description').textContent = property.description;
   document.getElementById('main-photo').src = property.images[0];
@@ -49,7 +49,7 @@ function showProperty(property, custom = false) {
   document.title = `${property.title} | TL Ingatlaniroda`;
   document.getElementById('property-location').textContent = property.location;
   document.getElementById('property-title').textContent = property.title;
-  document.getElementById('property-price').textContent = property.price;
+  document.getElementById('property-price').innerHTML = property.priceReduction && property.discountPrice ? `<span class="detail-price-reduction"><s>${property.price}</s><b>ÁRCSÖKKENÉS!</b><strong>${property.discountPrice}</strong></span>` : property.price;
   document.getElementById('property-subtitle').textContent = `${property.type} · ${property.area} · ${property.rooms}`;
   document.getElementById('property-description').innerHTML = property.description;
   const main = document.getElementById('main-photo');
@@ -70,7 +70,7 @@ function showProperty(property, custom = false) {
   document.title = `${property.title} | TL Ingatlaniroda`;
   document.getElementById('property-location').textContent = property.location;
   document.getElementById('property-title').textContent = property.title;
-  document.getElementById('property-price').textContent = property.price;
+  document.getElementById('property-price').innerHTML = property.priceReduction && property.discountPrice ? `<span class="detail-price-reduction"><s>${property.price}</s><b>ÁRCSÖKKENÉS!</b><strong>${property.discountPrice}</strong></span>` : property.price;
   document.getElementById('property-subtitle').textContent = `${property.type} · ${property.area} · ${property.rooms}`;
   document.getElementById('property-description').innerHTML = property.description;
   const main = document.getElementById('main-photo');
@@ -110,7 +110,7 @@ function showProperty(property, custom = false) {
   document.title = `${property.title} | TL Ingatlaniroda`;
   document.getElementById('property-location').textContent = property.location;
   document.getElementById('property-title').textContent = property.title;
-  document.getElementById('property-price').textContent = property.price;
+  document.getElementById('property-price').innerHTML = property.priceReduction && property.discountPrice ? `<span class="detail-price-reduction"><s>${property.price}</s><b>ÁRCSÖKKENÉS!</b><strong>${property.discountPrice}</strong></span>` : property.price;
   document.getElementById('property-subtitle').textContent = `${property.type} · ${property.area} · ${property.rooms}`;
   document.getElementById('property-description').innerHTML = property.description;
   const gallery = document.querySelector('.gallery-layout');
