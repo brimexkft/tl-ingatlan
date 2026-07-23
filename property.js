@@ -103,3 +103,38 @@ function showProperty(property, custom = false) {
 const pageGalleryStyle = document.createElement('style');
 pageGalleryStyle.textContent = '.gallery-navigation{display:flex;justify-content:center;align-items:center;gap:20px;margin:16px 0 0}.gallery-navigation button{border:0;background:transparent;color:var(--brown);font-size:27px;line-height:1;cursor:pointer;padding:6px 12px}.gallery-navigation button:hover{color:var(--gold)}.gallery-navigation span{min-width:90px;text-align:center;font-size:12px;color:#796c63}.gallery-navigation[hidden]{display:none}';
 document.head.append(pageGalleryStyle);
+
+/* Ribbon carousel: large image cards slide one by one, with the next card partially visible. */
+function showProperty(property, custom = false) {
+  const images = [...new Set((property.images || []).filter(Boolean))];
+  document.title = `${property.title} | TL Ingatlaniroda`;
+  document.getElementById('property-location').textContent = property.location;
+  document.getElementById('property-title').textContent = property.title;
+  document.getElementById('property-price').textContent = property.price;
+  document.getElementById('property-subtitle').textContent = `${property.type} · ${property.area} · ${property.rooms}`;
+  document.getElementById('property-description').innerHTML = property.description;
+  const gallery = document.querySelector('.gallery-layout');
+  gallery.classList.add('ribbon-gallery');
+  gallery.innerHTML = '<div class="gallery-viewport"><div class="gallery-track"></div></div>';
+  const track = gallery.querySelector('.gallery-track');
+  track.innerHTML = images.map((image, index) => `<button type="button" class="gallery-card" aria-label="${index + 1}. kép megnyitása"><img src="${image}" alt="${property.title} ${index + 1}. kép" /></button>`).join('');
+  track.querySelectorAll('.gallery-card').forEach((card, index) => card.addEventListener('click', () => openLightbox(images, index)));
+  let navigation = document.getElementById('gallery-navigation');
+  if (!navigation) { navigation = document.createElement('div'); navigation.id = 'gallery-navigation'; navigation.className = 'gallery-navigation'; navigation.innerHTML = '<button type="button" class="gallery-back" aria-label="Előző kép">←</button><span></span><button type="button" class="gallery-forward" aria-label="Következő kép">→</button>'; gallery.after(navigation); }
+  let start = 0;
+  const renderGallery = () => {
+    const card = track.querySelector('.gallery-card');
+    const step = card ? card.getBoundingClientRect().width + 16 : 0;
+    track.style.transform = `translateX(-${start * step}px)`;
+    navigation.querySelector('span').textContent = images.length ? `${start + 1} / ${images.length} kép` : '';
+    navigation.hidden = images.length <= 1;
+    navigation.querySelector('.gallery-back').disabled = start === 0;
+    navigation.querySelector('.gallery-forward').disabled = start >= images.length - 1;
+  };
+  navigation.querySelector('.gallery-back').onclick = () => { start = Math.max(0, start - 1); renderGallery(); };
+  navigation.querySelector('.gallery-forward').onclick = () => { start = Math.min(images.length - 1, start + 1); renderGallery(); };
+  window.addEventListener('resize', renderGallery, { passive: true });
+  requestAnimationFrame(renderGallery);
+  const features = custom ? [['Ingatlan típusa', property.type], ['Alapterület', property.area], ['Szobák száma', property.rooms], ['Ingatlan állapota', property.condition], ['Építés éve', property.year || 'Nincs megadva'], ['Emelet', property.floor], ['Emeletek száma', property.floors || 'Nincs megadva'], ['Lift', property.lift], ['Épület külső állapota', property.outside], ['Épület belső állapota', property.inside], ['Fényviszonyok', property.light], ['Parkolás', property.parking], ['Erkély / terasz', property.balcony], ['Nézet', property.view], ['Tájolás', property.orientation], ['Fűtés', property.heating || 'Nincs megadva'], ['Energetikai besorolás', property.energy]] : [['Ingatlan típusa', property.type], ['Alapterület', property.area], ['Szobák száma', property.rooms], ['Telek / környezet', property.plot], ['Építés / felújítás', property.year], ['Állapot', 'Újszerű']];
+  document.getElementById('feature-grid').innerHTML = features.map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join('');
+}
