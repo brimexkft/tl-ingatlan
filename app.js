@@ -60,7 +60,7 @@ document.getElementById('listing-form').addEventListener('submit', event => {
 
 function enablePropertyCard(card) {
   const openDetails = () => { if (card.dataset.id) window.location.href = `property.html?id=${card.dataset.id}`; };
-  card.addEventListener('click', event => { if (!event.target.closest('.heart, .details-link')) openDetails(); });
+  card.addEventListener('click', event => { if (!event.target.closest('.heart, .details-link, .image-details-link')) openDetails(); });
   card.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDetails(); } });
 }
 
@@ -77,7 +77,7 @@ savedProperties.forEach(data => {
   card.dataset.location = data.location;
   card.dataset.area = data.area;
   const cover = data.images?.[0] || '';
-  card.innerHTML = `<div class="property-image" style="background-image:url('${cover}')"><span class="tag ${data.purpose === 'Kiadó' ? 'rent' : ''}">${data.purpose}</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button></div><div class="property-info"><p>${data.location}</p><h3>${data.title}</h3><div><strong>${data.price}</strong><span>${data.area} m² · ${data.rooms}</span></div><a class="details-link" href="property.html?id=${data.id}">Megnézem a részleteket <span>→</span></a></div>`;
+  card.innerHTML = `<div class="property-image" style="background-image:url('${cover}')"><span class="tag ${data.purpose === 'Kiadó' ? 'rent' : ''}">${data.purpose}</span><button class="heart" aria-label="Kedvencnek jelölés">♡</button><a class="image-details-link" href="property.html?id=${data.id}">Megnézem</a></div><div class="property-info"><p>${data.location}</p><h3>${data.title}</h3><div><strong>${data.price}</strong><span>${data.area} m² · ${data.rooms}</span></div></div>`;
   card.querySelector('.heart').addEventListener('click', event => { event.currentTarget.classList.toggle('liked'); event.currentTarget.textContent = event.currentTarget.classList.contains('liked') ? '♥' : '♡'; });
   document.getElementById('property-grid').prepend(card);
   enablePropertyCard(card);
